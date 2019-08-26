@@ -1,21 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainMenuController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Quit" />
+              <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" onAction="#quit" text="Quit" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
    </top>
+   <center>
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+            <Tab fx:id="aboutTab" text="About">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea editable="false" layoutX="39.0" layoutY="23.0" prefHeight="700.0" prefWidth="900.0" text="Information about the program and how to use it will be here." />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+          <Tab fx:id="originalImageTab" text="Original Image">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="746.0" prefWidth="980.0">
+                     <children>
+                        <ImageView fx:id="imagePanel" fitHeight="700.0" fitWidth="900.0" layoutX="39.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="convertedImageTab" text="Converted Image">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea editable="false" layoutX="39.0" layoutY="23.0" prefHeight="700.0" prefWidth="900.0" text="Converted images will appear here.">
+                           <font>
+                              <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+                           </font>
+                        </TextArea>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <left>
+      <VBox prefHeight="775.0" prefWidth="302.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutX="10.0" layoutY="128.0" prefHeight="42.0" prefWidth="302.0" text="Load Image">
+               <font>
+                  <Font name="Lucida Sans Typewriter Bold" size="15.0" />
+               </font>
+            </Label>
+            <HBox prefHeight="25.0" prefWidth="302.0">
+               <children>
+                  <Button fx:id="openImageButton" mnemonicParsing="false" onAction="#openImage" text="Open Image" />
+                  <TextField fx:id="imagePathTextField" editable="false" prefHeight="25.0" prefWidth="220.0" />
+               </children>
+            </HBox>
+            <Separator prefHeight="22.0" prefWidth="302.0" />
+            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="42.0" prefWidth="302.0" text="ASCII Ramp Settings">
+               <font>
+                  <Font name="Lucida Sans Typewriter Bold" size="15.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="fullRamp" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setRampToFull" prefHeight="23.0" prefWidth="302.0" selected="true" text="Use full 70 character ASCII ramp">
+               <padding>
+                  <Insets left="40.0" />
+               </padding>
+               <toggleGroup>
+                  <ToggleGroup fx:id="RampSelection" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="miniRamp" contentDisplay="CENTER" layoutX="10.0" layoutY="153.0" mnemonicParsing="false" onAction="#setRampToMini" prefHeight="27.0" prefWidth="302.0" text="Use mini 10 character ASCII ramp" toggleGroup="$RampSelection">
+               <padding>
+                  <Insets left="40.0" />
+               </padding>
+            </RadioButton>
+            <Separator layoutX="10.0" layoutY="73.0" prefHeight="28.0" prefWidth="302.0" />
+            <HBox prefHeight="88.0" prefWidth="302.0">
+               <children>
+                  <Button fx:id="convertImage" mnemonicParsing="false" prefHeight="60.0" prefWidth="302.0" text="Convert">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </left>
 </BorderPane>
