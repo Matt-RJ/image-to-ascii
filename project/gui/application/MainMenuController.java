@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -45,6 +46,12 @@ public class MainMenuController {
 	@FXML
 	private RadioButton miniRamp;
 	
+	@FXML
+	private Button convertImageButton;
+	
+	@FXML
+	private TextArea convertedImageTextArea;
+	
 	/**
 	 * Opens a file browser for the user to select an image to convert.
 	 * @param event
@@ -80,8 +87,9 @@ public class MainMenuController {
 	@FXML
 	public void convertImage(ActionEvent event) {
 		if (Main.asciiConverter.getLoadedImageFile() == null) return;
-		
-		// TODO
+		String asciiArt = Main.asciiConverter.toAsciiArt(Main.asciiConverter.getLoadedImage());
+		System.out.println(asciiArt);
+		displayAsciiArt(asciiArt);
 	}
 	
 	
@@ -98,6 +106,10 @@ public class MainMenuController {
 	 */
 	public void updateImagePath(String path) {
 		imagePathTextField.setText(path);
+	}
+	
+	public void displayAsciiArt(String asciiArt) {
+		convertedImageTextArea.setText(asciiArt);
 	}
 	
 	// Radio Buttons
