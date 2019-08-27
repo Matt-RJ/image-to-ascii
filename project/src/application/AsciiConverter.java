@@ -29,9 +29,8 @@ public class AsciiConverter {
 		MINI, // The converter will use the small 10 character asciiRampMini for conversion
 	}
 	
-	// The height/width of the grid that's created on the image. The resulting ASCII art will also be this width/height in characters.
-	private int gridHeight = 80;
-	private int gridWidth = 80;
+	// The number of columns the ASCII art will have, the rows are calculated with gridColumns
+	private int tileColumns = 80; // TODO: Add GUI element to change this.
 	
 	private File loadedImageFile = null; // The file of the image to convert to ascii
 	private Image loadedImage = null; // An Image version of loadedImageFile
@@ -67,7 +66,6 @@ public class AsciiConverter {
 	public AsciiConverter() {
 		
 	}
-	
 	public AsciiConverter(Ramp ramp) {
 		this.rampLevel = ramp;
 	}
@@ -86,8 +84,18 @@ public class AsciiConverter {
 		if (this.rampLevel == Ramp.FULL) ramp = asciiRamp;
 		else if (this.rampLevel == Ramp.MINI) ramp = asciiRampMini;
 		
-		// TODO: Split up image into a grid
-		// TODO: Take inputs from the user to change the size of the grid.
+		double imageWidth = image.getWidth();
+		double imageHeight = image.getHeight();
+		
+		// Gets tile width
+		double tileWidth = imageWidth / tileColumns; // TODO: Take inputs from the user to change the size of the grid.
+		double tileHeight = imageWidth / 12; // TODO: Use the font scale here instead of 12
+		
+		// The final ASCII image will be tileRows * tileColumns characters in size
+		int tileRows = (int) (imageHeight / tileHeight);
+		
+		// TODO: Use getSubimage to analyze each tile
+		double[][] tileSet = new double[tileRows][tileColumns];
 		
 		// TODO: Get the average brightness value for each tile in the grid
 		
@@ -96,6 +104,37 @@ public class AsciiConverter {
 		// TODO: Create and return a String that contains the converted image.
 		
 		return asciiArt;
+	}
+	
+	/**
+	 * Gets the average brightness of an Image
+	 * @param image - An Image object to get the average brightness of.
+	 * @return A Color object, where the R,G,B values are all the average brightness.
+	 */
+	public Color getAverageBrightness(Image image) {
+		PixelReader pr = image.getPixelReader();
+		
+		double totalBrightness = 0.0;
+		double imgHeight = image.getHeight();
+		double imgWidth = image.getWidth();
+		
+		// Adds each pixel's average brightness to totalBrightness
+		for (int y = 0; y < imgHeight; y++) {
+			for (int x = 0; x < imgWidth; x++) {
+				Color pixelColor = pr.getColor(x, y);
+				double pixelRed = pixelColor.getRed();
+				double pixelGreen = pixelColor.getGreen();
+				double pixelBlue = pixelColor.getBlue();
+				double pixelAverage = (pixelRed + pixelGreen + pixelBlue) / 3;
+				
+				totalBrightness += pixelAverage;
+			}
+		}
+		
+		// Gets the average brightness of the whole image
+		double avgBrightness = totalBrightness / (imgHeight * imgWidth);
+		
+		return new Color(avgBrightness,avgBrightness,avgBrightness,1.0);
 	}
 	
 	/**

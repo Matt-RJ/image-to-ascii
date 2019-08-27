@@ -11,6 +11,19 @@ import javafx.scene.Scene;
  * 
  * @author Mantas Rajackas
  *
+ * This program converts images into ASCII art. This is done by splitting an image into a grid. Each grid tile is 
+ * assigned an ASCII character based on the average brightness of all the pixels in it.
+ * <br><br>
+ * The project took inspiration from chapter 6 of 'Python Playground - Geeky Projects for the Curious Programmer' 
+ * by Mahesh Venkitachalam. Its concepts on generating ASCII art from images has been transferred to Java with a
+ * GUI approach, rather than a CLI one.
+ * 
+ * @see <a href="https://www.amazon.com/Python-Playground-Projects-Curious-Programmer-ebook/dp/B017AH8H7I">
+ * 			'Python Playground - Geeky Projects for the Curious Programmer' on Amazon
+ * 		</a>
+ * @see <a href="http://paulbourke.net/dataformats/asciiart/">
+ * 			Character representation of grey scale images
+ * 		</a>
  */
 public class Main extends Application {
 	
