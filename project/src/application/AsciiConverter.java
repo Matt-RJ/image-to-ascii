@@ -23,14 +23,18 @@ public class AsciiConverter {
 	private static final String asciiRamp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 	// A smaller version of asciiRamp with fewer brightness levels.
 	private static final String asciiRampMini = "@%#*+=-:. ";
+	// A custom ramp defined by the user in the GUI
+	private static String asciiRampCustom = ""; // TODO: Add GUI element
 	
 	enum Ramp {
 		FULL, // The converter will use the full 70 character asciiRamp for conversion
 		MINI, // The converter will use the small 10 character asciiRampMini for conversion
+		CUSTOM, // The converter will use custom a ramp defined by the user
 	}
 	
 	// The number of columns the ASCII art will have, the rows are calculated with gridColumns
-	private int tileColumns = 40; // TODO: Add GUI element to change this.
+	private int tileColumns = 80; // TODO: Add GUI element to change this.
+	private double scale = 0.5; // TODO: Add GUI element to change this.
 	
 	private File loadedImageFile = null; // The file of the image to convert to ascii
 	private Image loadedImage = null; // An Image version of loadedImageFile
@@ -38,6 +42,12 @@ public class AsciiConverter {
 	private Ramp rampLevel = Ramp.FULL; // Which character ramp will be used to convert
 	
 	// Getters / Setters
+	public String getAsciiRampCustom() {
+		return asciiRampCustom;
+	}
+	public void setAsciiRampCustom(String asciiRampCustom) {
+		AsciiConverter.asciiRampCustom = asciiRampCustom;
+	}
 	public File getLoadedImageFile() {
 		return loadedImageFile;
 	}
@@ -63,6 +73,19 @@ public class AsciiConverter {
 		this.rampLevel = rampLevel;
 	}
 	
+
+	public int getTileColumns() {
+		return tileColumns;
+	}
+	public void setTileColumns(int tileColumns) {
+		this.tileColumns = tileColumns;
+	}
+	public double getScale() {
+		return scale;
+	}
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
 	public AsciiConverter() {
 		
 	}
@@ -77,57 +100,55 @@ public class AsciiConverter {
 	 */
 	public String toAsciiArt(Image image) {
 		
-		if (tileColumns > image.getWidth()) return null;
+		int imageWidth = (int) image.getWidth();
+		int imageHeight = (int) image.getHeight();
+		
+		double tileWidth = imageWidth / tileColumns; // TODO: Add GUI element to change this value
+		double tileHeight = tileWidth / scale; // TODO: Add GUI element to change this value
+		
+		if (tileColumns > imageWidth) {
+			throw new IllegalArgumentException("There are more tile columns than pixel columns in the image.");
+		}
+		if (tileHeight > imageHeight) {
+			throw new IllegalArgumentException("The tile height is bigger than the height of the image.");
+		}
 		
 		String asciiArt = "";
 		
 		// Which set of characters the converted image will have
-		String ramp = null;
+		// TODO: Add custom ramp check
+		String ramp;
 		if (this.rampLevel == Ramp.FULL) ramp = asciiRamp;
 		else ramp = asciiRampMini;
-		
-		int imageWidth = (int) image.getWidth();
-		int imageHeight = (int) image.getHeight();
-		
-		// Gets tile width
-		double tileWidth = imageWidth / tileColumns; // TODO: Add GUI element to change this value
-		double tileHeight = tileWidth / 0.6; // TODO: Add GUI element to change this value
-		
-		// The final ASCII image will be tileRows * tileColumns characters in size
-		double tileRows = imageHeight / tileHeight;
-		System.out.println(tileRows);
-		
+
 		// Iterates through each tile in the image
 		for (int y = 0; y < imageHeight; y += tileHeight) {
 			for (int x = 0; x < imageWidth; x += tileWidth) {
+
+				Image tileImage;
 				
-				try {
-					Image tileImage = getSubImage(image, x, y, (int) tileWidth, (int) tileRows);
-					
-					int avgBrightness = (int) (getAverageBrightness(tileImage).getRed() * 255);
-					
-					// Selects the char to use for the tile
-					int charIndex = remap(avgBrightness, 0, 255, 0, ramp.length()-1);
-					char tileChar = ramp.charAt(charIndex);
-					asciiArt += tileChar;
-				}
-				catch (ArrayIndexOutOfBoundsException e) {
-					e.printStackTrace(); // TODO: Fix this exception occuring (Likely to do with the bottom row of tiles)
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+				// The tile height can change for border tiles
+				// if the tile width doesn't divide evenly into the width of the image
+				double currentTileWidth = tileWidth;
+				double currentTileHeight = tileHeight;
+				
+				// Makes the rightmost and/or bottommost tiles smaller if necessary
+				if (x+currentTileWidth > imageWidth) currentTileWidth = imageWidth - x;
+				if (y+currentTileHeight > imageHeight) currentTileHeight = imageHeight - y;
+				
+				// Gets the average brightness for the current tile
+				tileImage = getSubImage(image, x, y, (int) (currentTileWidth), (int) (currentTileHeight));
+				int avgBrightness = (int) (getAverageBrightness(tileImage).getRed() * 255);
+				
+				// Selects the char to use for the tile
+				int charIndex = remap(avgBrightness, 0, 255, 0, ramp.length()-1);
+				char tileChar = ramp.charAt(charIndex);
+				asciiArt += tileChar;
+
 				
 			}
 			asciiArt += "\n";
-			System.out.println(asciiArt);
 		}
-		
-		// TODO: Get the average brightness value for each tile in the grid
-		
-		// TODO: Map the brightnesses of each tile to a value in asciiRamp or asciiRampMini
-		
-		// TODO: Create and return a String that contains the converted image.
 		
 		return asciiArt;
 	}
