@@ -45,6 +45,10 @@ public class MainMenuController {
 	private RadioButton fullRamp;
 	@FXML
 	private RadioButton miniRamp;
+	@FXML
+	private RadioButton customRamp;
+	@FXML
+	private TextField customRampText;
 	
 	@FXML
 	private Button convertImageButton;
@@ -84,12 +88,27 @@ public class MainMenuController {
 		}
 	}
 	
+	/**
+	 * Converts the loaded image into ASCII art.
+	 * @param event
+	 */
 	@FXML
 	public void convertImage(ActionEvent event) {
+		// Does nothing if no image is loaded
 		if (Main.asciiConverter.getLoadedImageFile() == null) return;
+		
+		// Updates the custom ramp
+		Main.asciiConverter.setAsciiRampCustom(customRampText.getText());
+		System.out.println(customRampText.getText());
+		System.out.println(Main.asciiConverter.getRampLevel());
+		
+		// Generates ASCII art
 		String asciiArt = Main.asciiConverter.toAsciiArt(Main.asciiConverter.getLoadedImage());
 		System.out.println(asciiArt);
+		
+		// Switches to the ASCII art tab and displays the generated text
 		displayAsciiArt(asciiArt);
+		switchToConvertedImageTab();
 	}
 	
 	
@@ -129,6 +148,14 @@ public class MainMenuController {
 	@FXML
 	public void setRampToMini(ActionEvent event) {
 		Main.asciiConverter.setRampLevel(AsciiConverter.Ramp.MINI);
+	}
+	/**
+	 * Sets the ramp for the converter to custom
+	 * @param event
+	 */
+	@FXML
+	public void setRampToCustom(ActionEvent event) {
+		Main.asciiConverter.setRampLevel(AsciiConverter.Ramp.CUSTOM);
 	}
 	
 	// Tab Switching
