@@ -5,6 +5,7 @@ import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -29,6 +30,9 @@ public class MainMenuController {
 	@FXML
 	private MenuItem quitMenuItem;
 	
+	
+	// Tabs and their content
+	
 	@FXML
 	private TabPane tabs;
 	@FXML
@@ -36,15 +40,23 @@ public class MainMenuController {
 	@FXML
 	private Tab originalImageTab;
 	@FXML
+	private ImageView imagePanel;
+	@FXML
 	private Tab convertedImageTab;
+	@FXML
+	private TextArea convertedImageTextArea;
+	
+	
+	// Image loading
 	
 	@FXML
 	private Button openImageButton;
 	@FXML
 	private TextField imagePathTextField;
-	@FXML
-	private ImageView imagePanel;
 	
+	
+	
+	// ASCII Ramp settings
 	
 	@SuppressWarnings("unused")
 	private ToggleGroup rampSelection;
@@ -56,12 +68,14 @@ public class MainMenuController {
 	private RadioButton customRamp;
 	@FXML
 	private TextField customRampText;
+	@FXML
+	private CheckBox invertCheckBox;
+	
 	
 	@FXML
 	private Button convertImageButton;
 	
-	@FXML
-	private TextArea convertedImageTextArea;
+
 	
 	/**
 	 * Opens a file browser for the user to select an image to convert.
@@ -108,6 +122,14 @@ public class MainMenuController {
 		Main.asciiConverter.setAsciiRampCustom(customRampText.getText());
 		System.out.println(customRampText.getText());
 		System.out.println(Main.asciiConverter.getRampLevel());
+		
+		// Updates whether the ASCII art is inverted or not
+		if (invertCheckBox.isSelected()) { 
+			Main.asciiConverter.setRampInverted(true);
+		}
+		else {
+			Main.asciiConverter.setRampInverted(false);
+		}
 		
 		// Generates ASCII art
 		String asciiArt = Main.asciiConverter.toAsciiArt(Main.asciiConverter.getLoadedImage());

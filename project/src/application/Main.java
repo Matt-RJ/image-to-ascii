@@ -3,7 +3,6 @@ package application;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import sun.util.logging.PlatformLogger.Level;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 

@@ -28,7 +28,9 @@ public class AsciiConverter {
 	private static final String asciiRampMini = "@%#*+=-:. ";
 	
 	// A custom ramp defined by the user in the GUI
-	private static String asciiRampCustom = ""; // TODO: Add GUI element
+	private static String asciiRampCustom = "";
+	
+	private boolean rampInverted = false;
 	
 	enum Ramp {
 		FULL, // The converter will use the full 70 character asciiRamp for conversion
@@ -51,6 +53,12 @@ public class AsciiConverter {
 	}
 	public void setAsciiRampCustom(String asciiRampCustom) {
 		AsciiConverter.asciiRampCustom = asciiRampCustom;
+	}
+	public boolean getRampInverted() {
+		return rampInverted;
+	}
+	public void setRampInverted(boolean rampInverted) {
+		this.rampInverted = rampInverted;
 	}
 	public File getLoadedImageFile() {
 		return loadedImageFile;
@@ -124,6 +132,13 @@ public class AsciiConverter {
 		if (this.rampLevel == Ramp.FULL) ramp = asciiRamp;
 		else if (this.rampLevel == Ramp.CUSTOM) ramp = asciiRampCustom; 
 		else ramp = asciiRampMini;
+		
+		if (rampInverted) {
+			StringBuilder reverseRamp = new StringBuilder();
+			reverseRamp.append(ramp);
+			reverseRamp = reverseRamp.reverse();
+			ramp = reverseRamp.toString();
+		}
 
 		// Iterates through each tile in the image
 		for (int y = 0; y < imageHeight; y += tileHeight) {
