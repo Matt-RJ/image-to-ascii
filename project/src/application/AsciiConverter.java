@@ -39,7 +39,7 @@ public class AsciiConverter {
 	}
 	
 	// The number of columns the ASCII art will have, the rows are calculated with gridColumns
-	private int tileColumns = 120; // TODO: Add GUI element to change this.
+	private int tileColumns = 80; // TODO: Add GUI element to change this.
 	private double scale = 0.5; // TODO: Add GUI element to change this.
 	
 	private File loadedImageFile = null; // The file of the image to convert to ascii

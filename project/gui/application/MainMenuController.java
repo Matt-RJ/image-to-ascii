@@ -3,11 +3,14 @@ package application;
 import java.io.File;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -15,6 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -72,10 +77,47 @@ public class MainMenuController {
 	private CheckBox invertCheckBox;
 	
 	
+	// ASCII Art Display Settings
+	
+	@FXML
+	private Spinner<Integer> tileColumnSpinner;
+	
+	
 	@FXML
 	private Button convertImageButton;
 	
-
+	
+	
+	public void initialize() {
+		
+		// Sets up the spinner for choosing how many character columns the ASCII art will have
+		SpinnerValueFactory<Integer> tileColumnValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 160);
+		this.tileColumnSpinner.setValueFactory(tileColumnValueFactory);
+		tileColumnSpinner.getValueFactory().setValue(80);
+		
+		// TODO: Add handling for non-integer inputs into tileColumnSpinner
+		
+		// Updates the number of columns in ASciiConverter when the spinner value changes
+		tileColumnSpinner.valueProperty().addListener((v, oldValue, newValue) -> {
+			System.out.println("Changed");
+			Main.asciiConverter.setTileColumns(newValue);
+			System.out.println("Tile columns: " + Main.asciiConverter.getTileColumns());
+		});
+		
+	}
+	
+	/**
+	 * Updates the value factory for the column spinner to not allow more tile columns than pixels in the loaded image.
+	 * @param min - The new min
+	 * @param max - The new max
+	 * @param setTo - The value to set the spinner to
+	 */
+	public void updateSpinnerValueFactory(int min, int max, int setTo) {
+		int imageWidth = (int) Main.asciiConverter.getLoadedImage().getWidth();
+		SpinnerValueFactory<Integer> tileColumnValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, imageWidth);
+		this.tileColumnSpinner.setValueFactory(tileColumnValueFactory);
+		tileColumnSpinner.getValueFactory().setValue(min);
+	}
 	
 	/**
 	 * Opens a file browser for the user to select an image to convert.
@@ -101,11 +143,16 @@ public class MainMenuController {
 			String imagePath = imageFile.getPath();
 			updateImagePath(imagePath);
 			
+			// Updates the column spinner to suit the new image
+			updateSpinnerValueFactory(2, (int) loadedImage.getWidth(), (int) loadedImage.getWidth()/2);
+			
 			// Switches to the original image tab
 			switchToOriginalImageTab();
+			
 		}
+			
 		catch (NullPointerException e) {
-			System.out.println("Image loading cancelled.");
+			System.err.println("Image loading cancelled.");
 		}
 	}
 	
@@ -120,8 +167,6 @@ public class MainMenuController {
 		
 		// Updates the custom ramp
 		Main.asciiConverter.setAsciiRampCustom(customRampText.getText());
-		System.out.println(customRampText.getText());
-		System.out.println(Main.asciiConverter.getRampLevel());
 		
 		// Updates whether the ASCII art is inverted or not
 		if (invertCheckBox.isSelected()) { 
@@ -133,7 +178,6 @@ public class MainMenuController {
 		
 		// Generates ASCII art
 		String asciiArt = Main.asciiConverter.toAsciiArt(Main.asciiConverter.getLoadedImage());
-		System.out.println(asciiArt);
 		
 		// Switches to the ASCII art tab and displays the generated text
 		displayAsciiArt(asciiArt);
