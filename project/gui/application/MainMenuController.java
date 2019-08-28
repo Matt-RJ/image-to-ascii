@@ -17,6 +17,13 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author Mantas Rajackas
+ * 
+ * This class bridges the MainMenu.fxml GUI and the rest of the program.
+ *
+ */
 public class MainMenuController {
 	
 	@FXML

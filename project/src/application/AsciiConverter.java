@@ -12,17 +12,21 @@ import javafx.scene.paint.Color;
  * 
  * @author Mantas Rajackas
  * 
- * Converts images to ASCII art.
+ * Converts JavaFX Image objects to ASCII art.
+ * Based on http://paulbourke.net/dataformats/asciiart/
+ * 
+ * @see <a href="http://paulbourke.net/dataformats/asciiart/">http://paulbourke.net/dataformats/asciiart/</a>
  *
  */
 public class AsciiConverter {
 	
-	// Based on http://paulbourke.net/dataformats/asciiart/
 	// Each character represents a different level of brightness per part of an ascii art image,
 	// with the leftmost chars representing darker areas, increasing in brightness going to the right.
 	private static final String asciiRamp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+	
 	// A smaller version of asciiRamp with fewer brightness levels.
 	private static final String asciiRampMini = "@%#*+=-:. ";
+	
 	// A custom ramp defined by the user in the GUI
 	private static String asciiRampCustom = ""; // TODO: Add GUI element
 	
@@ -103,8 +107,8 @@ public class AsciiConverter {
 		int imageWidth = (int) image.getWidth();
 		int imageHeight = (int) image.getHeight();
 		
-		double tileWidth = imageWidth / tileColumns; // TODO: Add GUI element to change this value
-		double tileHeight = tileWidth / scale; // TODO: Add GUI element to change this value
+		double tileWidth = imageWidth / tileColumns;
+		double tileHeight = tileWidth / scale;
 		
 		if (tileColumns > imageWidth) {
 			throw new IllegalArgumentException("There are more tile columns than pixel columns in the image.");
@@ -137,8 +141,8 @@ public class AsciiConverter {
 				if (y+currentTileHeight > imageHeight) currentTileHeight = imageHeight - y;
 				
 				// Gets the average brightness for the current tile
-				tileImage = getSubImage(image, x, y, (int) (currentTileWidth), (int) (currentTileHeight));
-				int avgBrightness = (int) (getAverageBrightness(tileImage).getRed() * 255);
+				tileImage = ImageHelper.getSubImage(image, x, y, (int) (currentTileWidth), (int) (currentTileHeight));
+				int avgBrightness = (int) (ImageHelper.getAverageBrightness(tileImage).getRed() * 255);
 				
 				// Selects the char to use for the tile
 				int charIndex = remap(avgBrightness, 0, 255, 0, ramp.length()-1);
@@ -151,14 +155,6 @@ public class AsciiConverter {
 		}
 		
 		return asciiArt;
-	}
-	
-	public Image getSubImage(Image image, int x, int y, int width, int height) {
-		
-		PixelReader pr = image.getPixelReader();
-		WritableImage subImage = new WritableImage(pr, x, y, width, height);
-		
-		return subImage;
 	}
 	
 	/**
@@ -175,74 +171,6 @@ public class AsciiConverter {
 		int newRange = newMax - newMin;
 		int newValue = (((value - min) * newRange) / range) + newMin;
 		return newValue;
-	}
-	
-	/**
-	 * Gets the average brightness of an Image
-	 * @param image - An Image object to get the average brightness of.
-	 * @return A Color object, where the R,G,B values are all the average brightness.
-	 */
-	public Color getAverageBrightness(Image image) {
-		PixelReader pr = image.getPixelReader();
-		
-		double totalBrightness = 0.0;
-		double imgHeight = image.getHeight();
-		double imgWidth = image.getWidth();
-		
-		// Adds each pixel's average brightness to totalBrightness
-		for (int y = 0; y < imgHeight; y++) {
-			for (int x = 0; x < imgWidth; x++) {
-				Color pixelColor = pr.getColor(x, y);
-				double pixelRed = pixelColor.getRed();
-				double pixelGreen = pixelColor.getGreen();
-				double pixelBlue = pixelColor.getBlue();
-				double pixelAverage = (pixelRed + pixelGreen + pixelBlue) / 3;
-				
-				totalBrightness += pixelAverage;
-			}
-		}
-		
-		// Gets the average brightness of the whole image
-		double avgBrightness = totalBrightness / (imgHeight * imgWidth);
-		
-		return new Color(avgBrightness,avgBrightness,avgBrightness,1.0);
-	}
-	
-	/**
-	 * Converts an Image to greyscale based on 
-	 * the average RGB values of every pixel
-	 * 
-	 * @param image - The Image to convert
-	 * @return A greyscale version of image
-	 */
-	public Image toGreyscale(Image image) {
-		WritableImage processedImage = new WritableImage(
-				(int) image.getWidth(), (int) image.getHeight());
-		
-		PixelReader pr = image.getPixelReader();
-		PixelWriter pw = processedImage.getPixelWriter();
-		
-		// Iterates through every pixel in the image
-		for (int y = 0; y < image.getHeight(); y++) {
-			for (int x = 0; x < image.getWidth(); x++) {
-				
-				// Gets the average red, green, and blue values of the pixel
-				Color pixelColor = pr.getColor(x, y);
-				double pixelRed = pixelColor.getRed();
-				double pixelGreen = pixelColor.getGreen();
-				double pixelBlue = pixelColor.getBlue();
-				double pixelGrey = (pixelRed + pixelGreen + pixelBlue) / 3;
-				
-				// Sets the pixel's red, green, and blue values to the same average value.
-				Color greyColor = new Color(pixelGrey,
-											pixelGrey,
-											pixelGrey,
-											pixelColor.getOpacity());
-				
-				pw.setColor(x, y, greyColor);
-			}
-		}
-		return processedImage;
 	}
 	
 }
