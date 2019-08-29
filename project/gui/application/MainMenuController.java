@@ -87,7 +87,6 @@ public class MainMenuController {
 	private Button convertImageButton;
 	
 	
-	
 	public void initialize() {
 		
 		// Sets up the spinner for choosing how many character columns the ASCII art will have
@@ -95,7 +94,28 @@ public class MainMenuController {
 		this.tileColumnSpinner.setValueFactory(tileColumnValueFactory);
 		tileColumnSpinner.getValueFactory().setValue(80);
 		
-		// TODO: Add handling for non-integer inputs into tileColumnSpinner
+		// This handler resets the spinner to its minimum value if an invalid input is typed in.
+		EventHandler<KeyEvent> spinnerValueEnteredHandler;
+		spinnerValueEnteredHandler = new EventHandler<KeyEvent>() {
+			
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.ENTER) {
+					try {
+						Integer.parseInt(tileColumnSpinner.getEditor().textProperty().get());
+					}
+					catch (NumberFormatException e) {
+						// If a string or float is input into the spinner, the input is changed to -1.
+						// -1 gets filtered by the spinner's factory into the minimum it allows.
+						System.err.println("Invalid input - Only integers are allowed.");
+						tileColumnSpinner.getEditor().textProperty().set(Integer.toString(-1));
+					}
+					
+				};
+			}
+			
+		};
+		tileColumnSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, spinnerValueEnteredHandler);
 		
 		// Updates the number of columns in ASciiConverter when the spinner value changes
 		tileColumnSpinner.valueProperty().addListener((v, oldValue, newValue) -> {
