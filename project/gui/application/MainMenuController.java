@@ -61,7 +61,7 @@ public class MainMenuController {
 	@FXML
 	private Button openImageButton;
 	@FXML
-	private TextField imagePathTextField;
+	private TextField imageNameTextField;
 	
 	
 	
@@ -205,9 +205,9 @@ public class MainMenuController {
 			// Displays the image that was just loaded in
 			displayImage(loadedImage);
 			
-			// Updates the text field to show the image path
-			String imagePath = imageFile.getPath();
-			updateImagePath(imagePath);
+			// Updates the text field to show the image name
+			String imageName = imageFile.getName();
+			updateImageName(imageName);
 			
 			// Updates the column spinner to suit the new image
 			updateSpinnerValueFactory(2, (int) loadedImage.getWidth(), (int) loadedImage.getWidth()/2);
@@ -253,19 +253,23 @@ public class MainMenuController {
 	
 	/**
 	 * Displays a JavaFX Image in the imagePanel.
-	 * @param image
+	 * @param image - The Image object to display
 	 */
 	public void displayImage(Image image) {
 		imagePanel.setImage(image);
 	}
 	/**
-	 * Updates the text of imagePathTextField
-	 * @param path
+	 * Updates the text of imageNameTextField
+	 * @param name - The new name
 	 */
-	public void updateImagePath(String path) {
-		imagePathTextField.setText(path);
+	public void updateImageName(String name) {
+		imageNameTextField.setText(name);
 	}
 	
+	/**
+	 * Displays ASCII art in the converted image tab.
+	 * @param asciiArt - The String of ASCII art to display.
+	 */
 	public void displayAsciiArt(String asciiArt) {
 		convertedImageTextArea.setText(asciiArt);
 	}

@@ -6,10 +6,10 @@ import javafx.scene.image.Image;
 
 /**
  * 
- * @author Mantas Rajackas
- * 
  * Converts JavaFX Image objects to ASCII art.
  * Based on http://paulbourke.net/dataformats/asciiart/
+ * 
+ * @author Mantas Rajackas
  * 
  * @see <a href="http://paulbourke.net/dataformats/asciiart/">http://paulbourke.net/dataformats/asciiart/</a>
  *
