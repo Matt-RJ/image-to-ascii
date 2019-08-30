@@ -10,6 +10,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
@@ -21,9 +23,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -88,10 +92,16 @@ public class MainMenuController {
 	@FXML
 	private Label columnsSetLabel;
 	
+	
+	// Converted Image Tab
 	@FXML
 	private Button copyToClipboardButton;
 	@FXML
 	private Label copiedLabel;
+	@FXML
+	private Label fontSizeLabel;
+	@FXML
+	private Slider fontSizeSlider;
 	
 	@FXML
 	private Button convertImageButton;
@@ -132,6 +142,9 @@ public class MainMenuController {
 			Main.asciiConverter.setTileColumns(newValue);
 			updateColumnsSetLabel(newValue);
 		});
+		
+		// Setting the scroll bar size for the ASCII art TextArea
+		setConvertedImageTextAreaScrollbarSize(15);
 		
 	}
 	
@@ -179,10 +192,39 @@ public class MainMenuController {
 	
 	/**
 	 * Updates the label under the column number spinner.
-	 * @param columnNumber
+	 * @param columnNumber - The new number of char columns.
 	 */
 	public void updateColumnsSetLabel(int columnNumber) {
 		columnsSetLabel.setText("Columns set: " + columnNumber);
+	}
+	
+	/**
+	 * Updates the ASCII art font size from its slider.
+	 * @param e
+	 */
+	public void setAsciiArtFontSize(MouseEvent e) {
+		int sliderValue = (int) fontSizeSlider.getValue();
+		System.out.println(convertedImageTextArea.getStyle());
+		convertedImageTextArea.setFont(new Font("Courier New", sliderValue));
+		setAsciiArtFontLabelNumber(sliderValue);
+		
+		// Updating the scrollbar size because font size changes cause the scrollbars to grow.
+		setConvertedImageTextAreaScrollbarSize(15);
+	}
+	
+	/**
+	 * Updates the number of the label next to the font size slider.
+	 * @param fontSize - The font size number to set.
+	 */
+	public void setAsciiArtFontLabelNumber(int fontSize) {
+		fontSizeLabel.setText("Font Size: " + fontSize);
+	}
+	
+	public void setConvertedImageTextAreaScrollbarSize(int prefSize) {
+		ScrollBar[] bars = new ScrollBar[2];
+		convertedImageTextArea.lookupAll(".scroll-bar").toArray(bars);
+		bars[0].setPrefWidth(prefSize);
+		bars[1].setPrefHeight(prefSize);
 	}
 	
 	/**
@@ -192,8 +234,14 @@ public class MainMenuController {
 	@FXML
 	public void openImage(ActionEvent event) {
 		try {
+			
 			// Opens file browser for selecting image
 			FileChooser fc = new FileChooser();
+			
+			fc.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("Image files", "*.jpg", "*.png", "*.bmp")
+			);
+			
 			fc.setTitle("Open Image");
 			File imageFile = fc.showOpenDialog(new Stage());
 			
