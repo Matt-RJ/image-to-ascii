@@ -3,10 +3,6 @@ package application;
 import java.io.File;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
 /**
  * 
@@ -40,7 +36,7 @@ public class AsciiConverter {
 	
 	// The number of columns the ASCII art will have, the rows are calculated with gridColumns
 	private int tileColumns = 80;
-	private double scale = 0.5; // TODO: Add GUI element to change this.
+	private double scale = 0.46; // TODO: Add GUI element to change this.
 	
 	private File loadedImageFile = null; // The file of the image to convert to ascii
 	private Image loadedImage = null; // An Image version of loadedImageFile
@@ -143,6 +139,8 @@ public class AsciiConverter {
 		// Iterates through each tile in the image
 		for (int y = 0; y < imageHeight; y += tileHeight) {
 			for (int x = 0; x < imageWidth; x += tileWidth) {
+				
+				// TODO: Optimise this as much as possible
 
 				Image tileImage;
 				

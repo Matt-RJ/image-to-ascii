@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -18,8 +19,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -81,7 +85,13 @@ public class MainMenuController {
 	
 	@FXML
 	private Spinner<Integer> tileColumnSpinner;
+	@FXML
+	private Label columnsSetLabel;
 	
+	@FXML
+	private Button copyToClipboardButton;
+	@FXML
+	private Label copiedLabel;
 	
 	@FXML
 	private Button convertImageButton;
@@ -119,9 +129,8 @@ public class MainMenuController {
 		
 		// Updates the number of columns in ASciiConverter when the spinner value changes
 		tileColumnSpinner.valueProperty().addListener((v, oldValue, newValue) -> {
-			System.out.println("Changed");
 			Main.asciiConverter.setTileColumns(newValue);
-			System.out.println("Tile columns: " + Main.asciiConverter.getTileColumns());
+			updateColumnsSetLabel(newValue);
 		});
 		
 	}
@@ -136,7 +145,44 @@ public class MainMenuController {
 		int imageWidth = (int) Main.asciiConverter.getLoadedImage().getWidth();
 		SpinnerValueFactory<Integer> tileColumnValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, imageWidth);
 		this.tileColumnSpinner.setValueFactory(tileColumnValueFactory);
-		tileColumnSpinner.getValueFactory().setValue(min);
+		tileColumnSpinner.getValueFactory().setValue((int) max/2);
+	}
+	
+	/**
+	 * Copies the text in the ASCII art TextArea into the system clipboard.
+	 * @param event
+	 */
+	public void copyArtToClipboard(ActionEvent event) {
+		String asciiArt = convertedImageTextArea.getText();
+		
+		final ClipboardContent content = new ClipboardContent();
+		content.putString(asciiArt);
+		Clipboard.getSystemClipboard().setContent(content);
+		
+		showCopiedLabel();
+	}
+	
+	/**
+	 * Shows the label notifying the user that they have copied the ascii art TextArea contents to their clipboard.
+	 */
+	public void showCopiedLabel() {
+		copiedLabel.setVisible(true);
+	}
+	
+	/**
+	 * Hides the label notifying the user that they have copied the ASCII art TextArea contents to their clipboard.
+	 * @param e
+	 */
+	public void hideCopiedLabel(MouseEvent e) {
+		copiedLabel.setVisible(false);
+	}
+	
+	/**
+	 * Updates the label under the column number spinner.
+	 * @param columnNumber
+	 */
+	public void updateColumnsSetLabel(int columnNumber) {
+		columnsSetLabel.setText("Columns set: " + columnNumber);
 	}
 	
 	/**
