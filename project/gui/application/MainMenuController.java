@@ -1,6 +1,8 @@
 package application;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,7 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -97,6 +98,8 @@ public class MainMenuController {
 	@FXML
 	private Button copyToClipboardButton;
 	@FXML
+	private Button saveToTxtButton;
+	@FXML
 	private Label copiedLabel;
 	@FXML
 	private Label fontSizeLabel;
@@ -142,9 +145,6 @@ public class MainMenuController {
 			Main.asciiConverter.setTileColumns(newValue);
 			updateColumnsSetLabel(newValue);
 		});
-		
-		// Setting the scroll bar size for the ASCII art TextArea
-		setConvertedImageTextAreaScrollbarSize(15);
 		
 	}
 	
@@ -209,7 +209,7 @@ public class MainMenuController {
 		setAsciiArtFontLabelNumber(sliderValue);
 		
 		// Updating the scrollbar size because font size changes cause the scrollbars to grow.
-		setConvertedImageTextAreaScrollbarSize(15);
+		setConvertedImageTextAreaScrollbarSize(13);
 	}
 	
 	/**
@@ -220,6 +220,10 @@ public class MainMenuController {
 		fontSizeLabel.setText("Font Size: " + fontSize);
 	}
 	
+	/**
+	 * Updates the size of the ASCII art TextArea's scrollbars
+	 * @param prefSize
+	 */
 	public void setConvertedImageTextAreaScrollbarSize(int prefSize) {
 		ScrollBar[] bars = new ScrollBar[2];
 		convertedImageTextArea.lookupAll(".scroll-bar").toArray(bars);
@@ -267,6 +271,29 @@ public class MainMenuController {
 			
 		catch (NullPointerException e) {
 			System.err.println("Image loading cancelled.");
+		}
+	}
+	
+	// TODO: Add button for this
+	public void saveAsciiArtTxt() {
+		
+		// Opens file browser to save .txt file
+		FileChooser fc = new FileChooser();
+		FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("TXT Fles", "*.txt");
+		fc.getExtensionFilters().add(txtFilter);
+		
+		File txtFile = fc.showSaveDialog(new Stage());
+		
+		if (txtFile != null) {
+			try {
+				PrintWriter writer;
+				writer = new PrintWriter(txtFile);
+				writer.print(convertedImageTextArea.getText());
+				writer.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

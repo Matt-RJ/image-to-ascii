@@ -31,6 +31,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			primaryStage.setMinWidth(960);
+			primaryStage.setMinHeight(555);
 			Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
 			Scene scene = new Scene(root,1280,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
