@@ -92,6 +92,7 @@
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </VBox>
+                              <VBox alignment="CENTER" layoutX="354.0" layoutY="10.0" prefHeight="62.0" prefWidth="260.0" />
                            </children>
                         </HBox>
                      </children>
@@ -171,6 +172,18 @@
                </VBox.margin>
             </HBox>
             <Label fx:id="columnsSetLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="304.0" text="Columns set: " />
+            <Separator layoutX="10.0" layoutY="460.0" prefHeight="13.0" prefWidth="302.0" visible="false" />
+            <Label fx:id="scaleLabel" alignment="CENTER" prefHeight="25.0" prefWidth="302.0" text="Scale:" />
+            <Slider fx:id="scaleSlider" blockIncrement="0.01" majorTickUnit="0.01" max="1.5" min="0.1" minorTickCount="0" onMouseDragged="#setScale" prefWidth="300.0" value="1.0">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </Slider>
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="302.0">
+               <children>
+                  <Button fx:id="resetScaleButton" mnemonicParsing="false" onAction="#resetScale" prefHeight="25.0" prefWidth="127.0" text="Reset scale to 0.5" />
+               </children>
+            </HBox>
             <Separator layoutX="10.0" layoutY="280.0" prefHeight="28.0" prefWidth="302.0" />
             <Button fx:id="convertImageButton" mnemonicParsing="false" onAction="#convertImage" prefHeight="60.0" prefWidth="302.0" text="Convert">
                <font>

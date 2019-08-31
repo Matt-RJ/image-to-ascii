@@ -36,7 +36,10 @@ public class AsciiConverter {
 	
 	// The number of columns the ASCII art will have, the rows are calculated with gridColumns
 	private int tileColumns = 80;
-	private double scale = 0.46; // TODO: Add GUI element to change this.
+	
+	// These values are used to compensate for different font sizes so the ASCII art doesn't appear stretched.
+	private final double DEFAULT_SCALE = 0.46;
+	private double scale = 0.46;
 	
 	private File loadedImageFile = null; // The file of the image to convert to ascii
 	private Image loadedImage = null; // An Image version of loadedImageFile
@@ -81,12 +84,14 @@ public class AsciiConverter {
 		this.rampLevel = rampLevel;
 	}
 	
-
 	public int getTileColumns() {
 		return tileColumns;
 	}
 	public void setTileColumns(int tileColumns) {
 		this.tileColumns = tileColumns;
+	}
+	public double getDefaultScale() {
+		return DEFAULT_SCALE;
 	}
 	public double getScale() {
 		return scale;
@@ -102,7 +107,14 @@ public class AsciiConverter {
 	}
 	
 	/**
-	 * Converts an Image file into a String of ASCII art.
+	 * Resets the instance's scale value to default
+	 */
+	public void resetScale() {
+		this.scale = DEFAULT_SCALE;
+	}
+	
+	/**
+	 * Converts a JavaFX Image into a String of ASCII art.
 	 * @param image - The image to convert
 	 * @return A string of ASCII art based on the Image.
 	 */

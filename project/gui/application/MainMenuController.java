@@ -3,6 +3,7 @@ package application;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -99,6 +100,13 @@ public class MainMenuController {
 	private Slider fontSizeSlider;
 	
 	@FXML
+	private Label scaleLabel;
+	@FXML
+	private Slider scaleSlider;
+	@FXML
+	private Button resetScaleButton;
+	
+	@FXML
 	private Button convertImageButton;
 	
 	/**
@@ -144,6 +152,10 @@ public class MainMenuController {
 		imagePanel.fitWidthProperty().bind(imagePanelContainer.widthProperty());
 		imagePanel.fitHeightProperty().bind(imagePanelContainer.heightProperty());
 		
+		// Updates the reset scale button to show what the default value is
+		resetScaleButton.setText("Reset scale to " + Main.asciiConverter.getDefaultScale());
+		// Updates the scale slider to the default value to start with
+		updateScaleLabel(Main.asciiConverter.getDefaultScale());
 	}
 	
 	/**
@@ -230,6 +242,38 @@ public class MainMenuController {
 	}
 	
 	/**
+	 * Sets the scale value to use for the ascii converter
+	 * @param e
+	 */
+	public void setScale(MouseEvent e) {
+		double newScale = scaleSlider.getValue();
+		Main.asciiConverter.setScale(newScale);
+		updateScaleLabel(newScale);
+	}
+	
+	/**
+	 * Resets the AsciiConverter scale to DEFAULT_SCALE
+	 * @param e
+	 */
+	public void resetScale(ActionEvent e) {
+		Main.asciiConverter.resetScale();
+		updateScaleLabel(Main.asciiConverter.getScale());
+		scaleSlider.setValue(Main.asciiConverter.getDefaultScale());
+	}
+	
+	/**
+	 * Updates the scale label to display the current scale (To 2 decimal places)
+	 * @param scaleNumber - The scale number to display on the label
+	 */
+	public void updateScaleLabel(double scaleNumber) {
+		// Truncates the double down to 2 decimal places for display
+		DecimalFormat df = new DecimalFormat("#.##");
+		String formattedScaleNumber = df.format(scaleNumber);
+		
+		scaleLabel.setText("Scale: " + formattedScaleNumber);
+	}
+	
+	/**
 	 * Opens a file browser for the user to select an image to convert.
 	 * @param event
 	 */
@@ -239,11 +283,9 @@ public class MainMenuController {
 			
 			// Opens file browser for selecting image
 			FileChooser fc = new FileChooser();
-			
 			fc.getExtensionFilters().addAll(
 				new FileChooser.ExtensionFilter("Image files", "*.jpg", "*.png", "*.bmp")
 			);
-			
 			fc.setTitle("Open Image");
 			File imageFile = fc.showOpenDialog(new Stage());
 			
