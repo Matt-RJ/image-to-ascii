@@ -28,6 +28,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,15 +45,14 @@ public class MainMenuController {
 	@FXML
 	private MenuItem quitMenuItem;
 	
-	
-	// Tabs and their content
-	
 	@FXML
 	private TabPane tabs;
 	@FXML
 	private Tab aboutTab;
 	@FXML
 	private Tab originalImageTab;
+	@FXML
+	private Pane imagePanelContainer;
 	@FXML
 	private ImageView imagePanel;
 	@FXML
@@ -61,16 +61,11 @@ public class MainMenuController {
 	private TextArea convertedImageTextArea;
 	
 	
-	// Image loading
-	
 	@FXML
 	private Button openImageButton;
 	@FXML
 	private TextField imageNameTextField;
 	
-	
-	
-	// ASCII Ramp settings
 	
 	@SuppressWarnings("unused")
 	private ToggleGroup rampSelection;
@@ -86,15 +81,12 @@ public class MainMenuController {
 	private CheckBox invertCheckBox;
 	
 	
-	// ASCII Art Display Settings
-	
 	@FXML
 	private Spinner<Integer> tileColumnSpinner;
 	@FXML
 	private Label columnsSetLabel;
 	
 	
-	// Converted Image Tab
 	@FXML
 	private Button copyToClipboardButton;
 	@FXML
@@ -109,7 +101,9 @@ public class MainMenuController {
 	@FXML
 	private Button convertImageButton;
 	
-	
+	/**
+	 * Runs when the controller is loaded to set up the scene properly.
+	 */
 	public void initialize() {
 		
 		// Sets up the spinner for choosing how many character columns the ASCII art will have
@@ -145,6 +139,10 @@ public class MainMenuController {
 			Main.asciiConverter.setTileColumns(newValue);
 			updateColumnsSetLabel(newValue);
 		});
+		
+		// Makes the loaded image resize properly with the window.
+		imagePanel.fitWidthProperty().bind(imagePanelContainer.widthProperty());
+		imagePanel.fitHeightProperty().bind(imagePanelContainer.heightProperty());
 		
 	}
 	
@@ -274,16 +272,18 @@ public class MainMenuController {
 		}
 	}
 	
-	// TODO: Add button for this
+	/**
+	 * Opens a window to save the contents of the generated ASCII art to a .TXT file
+	 */
 	public void saveAsciiArtTxt() {
 		
 		// Opens file browser to save .txt file
 		FileChooser fc = new FileChooser();
 		FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("TXT Fles", "*.txt");
 		fc.getExtensionFilters().add(txtFilter);
-		
 		File txtFile = fc.showSaveDialog(new Stage());
 		
+		// Saves the .txt file
 		if (txtFile != null) {
 			try {
 				PrintWriter writer;
@@ -293,6 +293,7 @@ public class MainMenuController {
 			}
 			catch (IOException e) {
 				e.printStackTrace();
+				System.err.println(".txt saving failed");
 			}
 		}
 	}
