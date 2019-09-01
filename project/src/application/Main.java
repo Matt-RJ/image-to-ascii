@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 /**
  * 
@@ -33,6 +34,8 @@ public class Main extends Application {
 		try {
 			primaryStage.setMinWidth(960);
 			primaryStage.setMinHeight(555);
+			primaryStage.setTitle("ImageToAscii");
+			primaryStage.getIcons().add(new Image("application/icon.png"));
 			Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
 			Scene scene = new Scene(root,1280,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
