@@ -152,8 +152,6 @@ public class AsciiConverter {
 		for (int y = 0; y < imageHeight; y += tileHeight) {
 			for (int x = 0; x < imageWidth; x += tileWidth) {
 				
-				// TODO: Optimise this as much as possible
-
 				Image tileImage;
 				
 				// The tile height can change for border tiles

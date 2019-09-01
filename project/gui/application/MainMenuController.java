@@ -154,7 +154,8 @@ public class MainMenuController {
 		
 		// Updates the reset scale button to show what the default value is
 		resetScaleButton.setText("Reset scale to " + Main.asciiConverter.getDefaultScale());
-		// Updates the scale slider to the default value to start with
+		// Updates the scale slider and label to the default value to start with
+		scaleSlider.setValue(Main.asciiConverter.getDefaultScale());
 		updateScaleLabel(Main.asciiConverter.getDefaultScale());
 	}
 	

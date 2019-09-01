@@ -44,7 +44,26 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextArea editable="false" layoutX="39.0" layoutY="23.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefWidth="900.0" text="Information about the program and how to use it will be here." AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0" />
+                        <VBox layoutX="-2.0" prefHeight="746.0" prefWidth="981.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <Label alignment="BOTTOM_CENTER" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="918.0" text="Image to Ascii by Mantas Rajackas ">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" />
+                              <Label alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="918.0" text="github.com/Matt-RJ">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <TextArea editable="false" maxHeight="1.7976931348623157E308" prefHeight="2000.0" prefWidth="920.0" text="This program converts images into ASCII art. This is done by splitting an image into a grid. Each grid tile is assigned an ASCII character based on the average brightness of all the pixels in it.&#10;&#10;To use this program:&#10;    1. Use the [open image] button to select a .png, .jpg, or a .bmp image to convert.&#10;    2. Select which ASCII ramp to use; an ASCII ramp is a set of characters ordered from darkest to lightest, &#10;        such as &quot;@#+-. &quot;. The 'darker' characters fill in the darker parts of the image and vice versa.&#10;    3. Select the number of character columns; more columns create more detailed ASCII art, but they are bigger and take longer to generate.&#10;    4. Press [Convert] to generate your ASCII art.&#10;    5. If the ASCII art appears to be stretched or squished, adjust the scale slider and convert again.&#10;        Different fonts have different aspect ratios, so copy-pasting to a different font may cause the art to stretch." wrapText="true">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
               </content>
@@ -138,7 +157,7 @@
                   <Insets left="40.0" />
                </padding>
             </RadioButton>
-            <RadioButton fx:id="customRamp" contentDisplay="CENTER" layoutX="10.0" layoutY="164.0" mnemonicParsing="false" onAction="#setRampToCustom" prefHeight="27.0" prefWidth="302.0" text="Use the custom ASCII ramp (set below):" toggleGroup="$RampSelection">
+            <RadioButton fx:id="customRamp" contentDisplay="CENTER" layoutX="10.0" layoutY="164.0" mnemonicParsing="false" onAction="#setRampToCustom" prefHeight="27.0" prefWidth="302.0" text="Use a custom ASCII ramp (set below):" toggleGroup="$RampSelection">
                <padding>
                   <Insets left="40.0" />
                </padding>
